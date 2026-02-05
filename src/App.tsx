@@ -1,75 +1,72 @@
-import React, { useState } from 'react';
-/**
- * Importação de ícones da biblioteca lucide-react.
- * Essa biblioteca fornece ícones SVG leves e modernos,
- * que podem ser usados como componentes React.
- */
+import React from 'react';
 import {
   Github,
   Linkedin,
   Mail,
   ExternalLink,
-  Code2,
   User,
   Briefcase,
   ChevronRight,
-  Database,
   Layout,
-  Cpu,
   Smartphone,
   Zap,
   Layers,
-  PlayCircle,
-  MessageCircle // Ícone para o botão flutuante do WhatsApp
+  MessageCircle
 } from 'lucide-react';
 
 /**
- * COMPONENTE: ProjectCard
- * --------------------------------------------------
- * Responsável por renderizar um card de projeto
- * na seção "Projetos em Destaque".
- *
- * Props esperadas:
- * - title: título do projeto
- * - description: descrição resumida
- * - tags: array de tecnologias
- * - link: URL da demo
- * - github: URL do repositório
- * - image: imagem do projeto
+ * Definição de Tipos para TypeScript
  */
-const ProjectCard = ({ title, description, tags, link, github, image }) => (
-  <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-slate-100 flex flex-col h-full group">
+interface ProjectProps {
+  title: string;
+  description: string;
+  tags: string[];
+  link: string;
+  github: string;
+  image?: string;
+}
 
-    {/* IMAGEM */}
+interface TechBadgeProps {
+  icon: React.ElementType;
+  name: string;
+  description: string;
+}
+
+/**
+ * COMPONENTE: ProjectCard
+ */
+const ProjectCard: React.FC<ProjectProps> = ({ title, description, tags, link, github, image }) => (
+  <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-slate-100 flex flex-col h-full group">
     <div className="h-52 relative overflow-hidden bg-slate-100">
       {image ? (
         <img
           src={image}
           alt={title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.currentTarget;
+            target.style.display = 'none';
+            if (target.nextSibling instanceof HTMLElement) {
+              target.nextSibling.style.display = 'flex';
+            }
+          }}
         />
-      ) : (
-        <div className="absolute inset-0 flex items-center justify-center text-slate-400 italic">
-          Screenshot do Projeto
-        </div>
-      )}
-
-      {/* Overlay hover */}
+      ) : null}
+      <div className="absolute inset-0 flex items-center justify-center text-slate-400 italic bg-slate-100 -z-10">
+        Screenshot do Projeto
+      </div>
       <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
     </div>
 
-    {/* CONTEÚDO */}
     <div className="p-6 flex flex-col flex-grow">
       <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">
         {title}
       </h3>
-
       <p className="text-slate-600 text-sm mb-4 flex-grow leading-relaxed">
         {description}
       </p>
-
       <div className="flex flex-wrap gap-2 mb-6">
-        {tags.map(tag => (
+        {tags.map((tag: string) => (
           <span
             key={tag}
             className="px-2.5 py-1 bg-slate-100 text-slate-600 text-[10px] uppercase tracking-wider font-bold rounded-md"
@@ -78,7 +75,6 @@ const ProjectCard = ({ title, description, tags, link, github, image }) => (
           </span>
         ))}
       </div>
-
       <div className="flex gap-4 border-t border-slate-50 pt-4">
         <a href={github} target="_blank" rel="noreferrer" className="text-xs font-bold text-slate-500 hover:text-indigo-600 flex items-center gap-1">
           <Github size={14} /> Repositório
@@ -93,16 +89,8 @@ const ProjectCard = ({ title, description, tags, link, github, image }) => (
 
 /**
  * COMPONENTE: TechBadge
- * --------------------------------------------------
- * Card reutilizável para exibir tecnologias / skills
- * na seção "Stack Tecnológica".
- *
- * Props:
- * - icon: componente de ícone
- * - name: nome da tecnologia
- * - description: breve explicação
  */
-const TechBadge = ({ icon: Icon, name, description }) => (
+const TechBadge: React.FC<TechBadgeProps> = ({ icon: Icon, name, description }) => (
   <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:border-indigo-200 hover:shadow-md transition-all group">
     <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all">
       <Icon size={24} />
@@ -112,59 +100,33 @@ const TechBadge = ({ icon: Icon, name, description }) => (
   </div>
 );
 
-/**
- * COMPONENTE PRINCIPAL: App
- * --------------------------------------------------
- * Estrutura completa da landing page / portfólio:
- * - Header fixo
- * - Hero section
- * - Sobre
- * - Projetos
- * - Tecnologias
- * - Contato
- * - Footer
- */
 export default function App() {
-  /**
-   * Caminho da imagem de perfil.
-   * Pode ser alterado para qualquer imagem local ou externa.
-   */
-  const profileImage = "src/assets/MinhaImagem.png";
-
-  /**
-   * ID do vídeo do YouTube usado na seção "Sobre".
-   * Basta trocar o ID para alterar o vídeo.
-   */
+  const profileImage = "/src/assets/MinhaImagem.png";
   const youtubeVideoId = "Q162FvWPbI0";
-  /**
-   * Lista de projetos exibidos na seção "Projetos em Destaque".
-   * Para adicionar um novo projeto, basta inserir um novo objeto.
-   */
 
-  const projects = [
-  {
-    title: 'Safira Digital',
-    description: 'Projeto real desenvolvido para minha empresa...',
-    tags: ['React', 'Business', 'SEO'],
-    github: 'https://github.com/Arcano5/SafiraDigital.git',
-    link: 'https://arcano5.github.io/SafiraDigital/',
-    image: '/src/assets/safira-print.png'
-  },
-  {
-    title: 'Verificador de Notas de Alunos',
-    description: 'Aplicação offline...',
-    tags: ['PWA', 'Service Workers'],
-    github: 'https://github.com/Arcano5/Mini-projetos/tree/42a352e14b8e746e9ba0d903031b172a63e90ff4/%23004%20Calcular%20notas',
-    link: '#',
-    image: '/src/assets/notasdosalunos.png'
-  }
-];
-
+  const projects: ProjectProps[] = [
+    {
+      title: 'Safira Digital',
+      description: 'Projeto real desenvolvido para minha empresa aplicando conceitos de UX/UI e SEO.',
+      tags: ['React', 'Business', 'SEO'],
+      github: 'https://github.com/Arcano5/SafiraDigital.git',
+      link: 'https://arcano5.github.io/SafiraDigital/',
+      image: '/src/assets/safira-print.png'
+    },
+    {
+      title: 'Verificador de Notas de Alunos',
+      description: 'Aplicação funcional para gestão e cálculo de médias escolares de forma offline.',
+      tags: ['PWA', 'Service Workers'],
+      github: 'https://github.com/Arcano5/Mini-projetos/tree/42a352e14b8e746e9ba0d903031b172a63e90ff4/%23004%20Calcular%20notas',
+      link: '#',
+      image: '/src/assets/notasdosalunos.png'
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-[#FDFDFF] font-sans text-slate-900 scroll-smooth relative">
       
-      {/* BOTÃO WHATSAPP */}
+      {/* WHATSAPP */}
       <a 
         href="https://wa.me/5511992095721" 
         target="_blank" 
@@ -187,7 +149,10 @@ export default function App() {
             {['home', 'sobre', 'projetos', 'tecnologias', 'contato'].map((item) => (
               <button
                 key={item}
-                onClick={() => document.getElementById(item)?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => {
+                  const el = document.getElementById(item);
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
                 className="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-600 transition-colors"
               >
                 {item}
@@ -220,7 +185,10 @@ export default function App() {
             </p>
             <div className="flex flex-wrap gap-4">
               <button
-                onClick={() => document.getElementById('projetos').scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => {
+                  const el = document.getElementById('projetos');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
                 className="bg-indigo-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center gap-2"
               >
                 Explorar Projetos <ChevronRight size={20} />
@@ -235,9 +203,11 @@ export default function App() {
                 src={profileImage} 
                 alt="Leonildo Freitas Gomes" 
                 className="w-full h-full object-cover" 
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                  const target = e.currentTarget;
+                  target.style.display = 'none';
+                  const next = target.nextSibling as HTMLElement;
+                  if (next) next.style.display = 'flex';
                 }}
               />
               <div className="hidden absolute inset-0 items-center justify-center bg-indigo-600 text-white font-black text-6xl">
@@ -248,11 +218,10 @@ export default function App() {
         </div>
       </section>
 
-      {/* SOBRE MIM COM VÍDEO REAL */}
+      {/* SOBRE MIM */}
       <section id="sobre" className="py-32 bg-slate-50 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
-            {/* PLAYER DO YOUTUBE */}
             <div className="relative group">
               <div className="relative rounded-[32px] overflow-hidden shadow-2xl bg-black aspect-video">
                 <iframe 
@@ -276,7 +245,7 @@ export default function App() {
                 <h2 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Sobre Mim</h2>
               </div>
               <p className="text-lg text-slate-600 leading-relaxed">
-                Minha jornada no desenvolvimento proporcionou que eu a formalização da minha própria empresa (MEI). O que era uma ferramenta de trabalho tornou-se uma paixão profissional.
+                Minha jornada no desenvolvimento proporcionou a formalização da minha própria empresa (MEI). O que era uma ferramenta de trabalho tornou-se uma paixão profissional.
               </p>
               <p className="text-lg text-slate-600 leading-relaxed">
                 No vídeo ao lado, explico um pouco mais sobre minha transição de carreira e os desafios que superei para dominar o <strong>Front End</strong>.
@@ -286,7 +255,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* SEÇÃO PROJETOS */}
+      {/* PROJETOS */}
       <section id="projetos" className="py-32 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -323,14 +292,13 @@ export default function App() {
         <div className="max-w-5xl mx-auto bg-indigo-600 rounded-[40px] p-12 md:p-20 text-white relative overflow-hidden">
           <h2 className="text-4xl md:text-6xl font-black mb-8 relative z-10 leading-tight">Vamos construir algo <br /> incrível juntos?</h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
-            <a href="mailto: leonildogomes.dev@outlook.com" className="bg-white text-indigo-600 px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-100 transition-all">
+            <a href="mailto:leonildogomes.dev@outlook.com" className="bg-white text-indigo-600 px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-100 transition-all">
               <Mail size={20} /> E-mail
             </a>
             <a href="https://www.linkedin.com/in/leonildo-freitas-gomes-059a3627b"
-            target = "_blank"
-            rel = "noopener noreferrer"
-            aria-label = "LinkedIn de Leonildo Freitas Gomes"
-            className="bg-indigo-500 text-white border border-indigo-400 px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-400 transition-all">
+               target="_blank"
+               rel="noopener noreferrer"
+               className="bg-indigo-500 text-white border border-indigo-400 px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-400 transition-all">
               <Linkedin size={20} /> LinkedIn
             </a>
           </div>
