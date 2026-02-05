@@ -101,7 +101,7 @@ const TechBadge: React.FC<TechBadgeProps> = ({ icon: Icon, name, description }) 
 );
 
 export default function App() {
-  const profileImage = "/src/assets/MinhaImagem.png";
+  const profileImage = "/MinhaImagem.png";
   const youtubeVideoId = "Q162FvWPbI0";
 
   const projects: ProjectProps[] = [
@@ -111,7 +111,7 @@ export default function App() {
       tags: ['React', 'Business', 'SEO'],
       github: 'https://github.com/Arcano5/SafiraDigital.git',
       link: 'https://arcano5.github.io/SafiraDigital/',
-      image: '/src/assets/safira-print.png'
+      image: '/safira-print.png'
     },
     {
       title: 'Verificador de Notas de Alunos',
@@ -119,7 +119,7 @@ export default function App() {
       tags: ['PWA', 'Service Workers'],
       github: 'https://github.com/Arcano5/Mini-projetos/tree/42a352e14b8e746e9ba0d903031b172a63e90ff4/%23004%20Calcular%20notas',
       link: '#',
-      image: '/src/assets/notasdosalunos.png'
+      image: '/notasdosalunos.png'
     }
   ];
 
